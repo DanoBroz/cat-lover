@@ -1,6 +1,4 @@
-import { RandomImage } from '../types'
-
-export interface RandomResponse {
+export interface ArrayResponse<ArrayType> {
   nextPage: number
-  data: RandomImage[]
+  data: ArrayType[]
 }
