@@ -2,6 +2,7 @@ import { useContext, MouseEvent } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { CatContext } from '../context'
 import type { CardProps, CatImageInfo } from '../types'
+import { CatImage } from './CatImage'
 
 export const RandomCard = (props: CardProps<CatImageInfo>) => {
   const { index, cardProps } = props
@@ -14,11 +15,11 @@ export const RandomCard = (props: CardProps<CatImageInfo>) => {
   }
 
   return (
-    <div
+    <CatImage
       key={cardProps.id}
-      style={{ backgroundImage: `url(${cardProps.url})` }}
+      imageUrl={cardProps.url}
       onClick={() => handleRandomClick(cardProps)}
-      className={`bg-cover item-${index} relative rounded-lg border border-blue-200 bg-center bg-no-repeat hover:cursor-pointer`}
-    ></div>
+      className={`item-${index}`}
+    ></CatImage>
   )
 }

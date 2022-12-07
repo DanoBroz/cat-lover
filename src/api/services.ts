@@ -1,4 +1,8 @@
-import type { PaginationResponse, PostFavoriteResponse } from './types'
+import type {
+  DeleteFavoriteResponse,
+  PaginationResponse,
+  PostFavoriteResponse,
+} from './types'
 import axios from 'axios'
 import { getRestApiConfig } from './config'
 import { CatBreed, CatImage, CatImageInfo, FavoriteItem } from '../types'
@@ -101,6 +105,22 @@ export const postFavorite = async (
   const { data } = await axios.post<PostFavoriteResponse>(
     requestUrl,
     body,
+    restApiConfig.apiConfig
+  )
+
+  return data
+}
+
+export const deleteFavorite = async (
+  imageId: number
+): Promise<DeleteFavoriteResponse> => {
+  const restApiConfig = getRestApiConfig()
+
+  const requestUrl = new URL(`v1/favourites/${imageId}`, restApiConfig.baseUrl)
+    .href
+
+  const { data } = await axios.delete<DeleteFavoriteResponse>(
+    requestUrl,
     restApiConfig.apiConfig
   )
 

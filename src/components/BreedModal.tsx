@@ -1,9 +1,8 @@
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { PortalFunctionParams } from 'react-portal'
 import { useNavigate } from 'react-router-dom'
-import { getBreedImages, getImageBreed } from '../api/services'
-import { CatBreed } from '../types'
-import { BreedCard } from './BreedCard'
+import { getBreedImages, getImageBreed, postFavorite } from '../api/services'
+import { CatImage } from './CatImage'
 
 interface BreedModalConfig {
   catImageId: string
@@ -31,6 +30,10 @@ export const BreedModal = (props: BreedModalProps) => {
     }
   )
 
+  const favoriteMutation = useMutation((imageId: string) =>
+    postFavorite(imageId)
+  )
+
   const navigate = useNavigate()
 
   return (
@@ -49,6 +52,7 @@ export const BreedModal = (props: BreedModalProps) => {
                 backgroundImage: `url(${imageInfo?.url || fallbackPicture})`,
               }}
               className='h-[336px] w-[336px] overflow-hidden rounded-lg border border-blue-200 bg-cover bg-center bg-no-repeat'
+              onClick={() => favoriteMutation.mutate(imageInfo?.id!)}
             />
             <div>
               <h2 className='pb-2 text-xl font-semibold'>
@@ -104,14 +108,10 @@ export const BreedModal = (props: BreedModalProps) => {
                   {data
                     ?.filter((image) => image.id !== imageInfo?.id)
                     .map((image, index) => (
-                      <div
-                        style={{
-                          backgroundImage: `url(${
-                            image?.url || fallbackPicture
-                          })`,
-                        }}
+                      <CatImage
+                        imageUrl={image?.url}
                         onClick={() => navigate(`/breed/${image.id}`)}
-                        className={`bg-cover item-${index} relative overflow-hidden rounded-lg border border-blue-200 bg-center bg-no-repeat hover:cursor-pointer`}
+                        className={`item-${index}`}
                         key={image.id}
                       />
                     ))}
