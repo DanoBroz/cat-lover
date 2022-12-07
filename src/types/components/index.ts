@@ -1,2 +1,8 @@
 export type { ButtonProps } from './Button'
-export type { CatImage, CatBreed, CardProps } from './Card'
+export type {
+  CatImage,
+  CatBreed,
+  CardProps,
+  CatImageInfo,
+  FavoriteItem,
+} from './Card'

@@ -15,7 +15,7 @@ export const Navbar = () => {
         random pictures
       </NavLink>
       <NavLink
-        to='/breeds'
+        to='/breed'
         className={({ isActive }) => (isActive ? activeClass : inactiveClass)}
       >
         cat breeds

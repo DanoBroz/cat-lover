@@ -1,1 +1,8 @@
-export type { ButtonProps, CatImage, CatBreed, CardProps } from './components'
+export type {
+  ButtonProps,
+  CatImage,
+  CatBreed,
+  CardProps,
+  CatImageInfo,
+  FavoriteItem,
+} from './components'
