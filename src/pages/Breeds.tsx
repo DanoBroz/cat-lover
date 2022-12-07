@@ -1,4 +1,4 @@
-import { useInfiniteQuery } from '@tanstack/react-query'
+import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { PortalWithState } from 'react-portal'
@@ -14,6 +14,7 @@ export const Breeds = () => {
   const { activeCatImage, setActiveCatImage } = useContext(CatContext)
   const [modalOpen, setModalOpen] = useState(false)
   const navigate = useNavigate()
+  const queryClient = useQueryClient()
 
   const breedsQuery = useInfiniteQuery({
     queryKey: ['breeds'],
@@ -46,12 +47,12 @@ export const Breeds = () => {
           ))}
         </ImageGridContainer>
       ))}
-      {breedsQuery.isFetchingNextPage && 'Loading...'}
       <Button
-        className='justify-self-center'
+        className='justify-self-center disabled:cursor-not-allowed disabled:bg-gray-500'
+        disabled={!breedsQuery.hasNextPage}
         onClick={() => breedsQuery.fetchNextPage()}
       >
-        load more
+        {breedsQuery.isFetchingNextPage ? 'loading more...' : 'load more'}
       </Button>
       <PortalWithState
         closeOnOutsideClick

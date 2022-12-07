@@ -4,6 +4,7 @@ import { ImageGridContainer } from '../containers'
 import { useFavorites, useModalData } from '../hooks'
 import { BreedDetails } from './BreedDetails'
 import { CatImage } from './CatImage'
+import { ReactComponent as CrossIcon } from '../assets/icons/cross.svg'
 
 type BreedModalProps = Partial<PortalFunctionParams>
 
@@ -25,6 +26,10 @@ export const BreedModal = (props: BreedModalProps) => {
         className='modal-content container sticky top-20 max-h-[70vh] overflow-y-scroll rounded-lg bg-white py-16'
         onClick={(e) => e.stopPropagation()}
       >
+        <CrossIcon
+          className='absolute top-6 right-6 transition-transform hover:scale-125 hover:cursor-pointer active:scale-95'
+          onClick={closePortal}
+        />
         <div className='m-5 mx-auto max-w-[688px]'>
           <div className='grid grid-cols-2 gap-4 pb-6'>
             <CatImage

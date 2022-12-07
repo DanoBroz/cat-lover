@@ -1,3 +1,4 @@
+import { FavoriteItem } from './../types/components/Card'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { deleteFavorite, getFavorites, postFavorite } from '../api/services'
 
@@ -10,14 +11,14 @@ export const useFavorites = () => {
   const favoriteMutation = useMutation(
     (imageId: string) => postFavorite(imageId),
     {
-      onSuccess: () => queryClient.invalidateQueries(['favorites']),
+      onSettled: () => queryClient.invalidateQueries(['favorites']),
     }
   )
 
   const deleteFavoriteMutation = useMutation(
     (imageId: number) => deleteFavorite(imageId),
     {
-      onSuccess: () => queryClient.invalidateQueries(['favorites']),
+      onSettled: () => queryClient.invalidateQueries(['favorites']),
     }
   )
   return { data, isLoading, favoriteMutation, deleteFavoriteMutation }

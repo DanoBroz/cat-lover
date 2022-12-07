@@ -27,12 +27,11 @@ export const Random = () => {
           ))}
         </section>
       ))}
-      {randomQuery.isFetchingNextPage && 'Loading...'}
       <Button
         className='justify-self-center'
         onClick={() => randomQuery.fetchNextPage()}
       >
-        load more
+        {randomQuery.isFetchingNextPage ? 'loading more...' : 'load more'}
       </Button>
     </div>
   )
