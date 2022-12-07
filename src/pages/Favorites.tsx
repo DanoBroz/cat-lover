@@ -1,22 +1,22 @@
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 import { MouseEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { deleteFavorite, getFavorites } from '../api/services'
-import { ReactComponent as FilledHeartIcon } from '../assets/icons/heat-filled.svg'
+import { getFavorites } from '../api/services'
+import { ReactComponent as FilledHeartIcon } from '../assets/icons/heart-filled.svg'
+import { CatImage } from '../components'
+import { ImageGridContainer } from '../containers'
+import { useFavorites } from '../hooks'
 
 export const Favorites = () => {
-  const favoritesQuery = useQuery({
-    queryKey: ['favorites'],
-    queryFn: getFavorites,
+  const favoritesQuery = useQuery(['favorites'], getFavorites, {
+    staleTime: 200,
   })
 
-  const deleteMutation = useMutation((imageId: number) =>
-    deleteFavorite(imageId)
-  )
+  const { deleteFavoriteMutation } = useFavorites()
 
   const deleteItem = (e: MouseEvent, itemId: number) => {
     e.stopPropagation()
-    deleteMutation.mutate(itemId)
+    deleteFavoriteMutation.mutate(itemId)
     favoritesQuery.refetch()
   }
 
@@ -27,21 +27,22 @@ export const Favorites = () => {
   ) : (
     <div className='grid gap-4'>
       {favoritesQuery.data?.length ? (
-        <section className='grid grid-cols-[repeat(4,_160px)] grid-rows-[grid-cols-[repeat(8,_160px)]] gap-4'>
-          {favoritesQuery.data?.map((item, index) => (
-            <div
+        <ImageGridContainer>
+          {favoritesQuery.data?.map((item) => (
+            <CatImage
               key={item.id}
-              style={{ backgroundImage: `url(${item.image.url})` }}
+              imageId={item.image_id}
+              imageUrl={item.image.url}
               onClick={() => navigate(`/breed/${item.image_id}`)}
-              className={`relative h-40 w-40 rounded-lg border border-blue-200 bg-cover bg-center bg-no-repeat hover:cursor-pointer`}
+              className='h-40 w-40'
             >
               <FilledHeartIcon
                 className='absolute top-2 right-2 w-6 transition-transform hover:scale-125 active:scale-90'
                 onClick={(e) => deleteItem(e, item.id)}
               />
-            </div>
+            </CatImage>
           ))}
-        </section>
+        </ImageGridContainer>
       ) : (
         <h2 className='text-xl'>Looks like you're more of a dog person...</h2>
       )}

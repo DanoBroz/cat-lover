@@ -10,6 +10,7 @@ export const BreedCard = (props: CardProps<CatBreed>) => {
   return (
     cardProps && (
       <CatImage
+        imageId={cardProps.reference_image_id}
         imageUrl={cardProps.image?.url}
         className={`item-${index}`}
         key={cardProps.id}

@@ -17,6 +17,7 @@ export const RandomCard = (props: CardProps<CatImageInfo>) => {
   return (
     <CatImage
       key={cardProps.id}
+      imageId={cardProps.id}
       imageUrl={cardProps.url}
       onClick={() => handleRandomClick(cardProps)}
       className={`item-${index}`}

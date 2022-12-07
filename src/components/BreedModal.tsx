@@ -1,38 +1,18 @@
-import { useMutation, useQuery } from '@tanstack/react-query'
 import { PortalFunctionParams } from 'react-portal'
 import { useNavigate } from 'react-router-dom'
-import { getBreedImages, getImageBreed, postFavorite } from '../api/services'
+import { ImageGridContainer } from '../containers'
+import { useFavorites, useModalData } from '../hooks'
+import { BreedDetails } from './BreedDetails'
 import { CatImage } from './CatImage'
 
-interface BreedModalConfig {
-  catImageId: string
-  fallbackPicture: string
-}
-
-type BreedModalProps = BreedModalConfig & Partial<PortalFunctionParams>
+type BreedModalProps = Partial<PortalFunctionParams>
 
 export const BreedModal = (props: BreedModalProps) => {
-  const { fallbackPicture, closePortal, catImageId } = props
+  const { closePortal } = props
 
-  const { data: imageInfo, isLoading: imageInfoLoading } = useQuery(
-    ['imageBreed', catImageId],
-    () => getImageBreed(catImageId),
-    {
-      keepPreviousData: true,
-    }
-  )
+  const { imageInfo, moreImageData, moreImageDataLoading } = useModalData()
 
-  const { data, isLoading } = useQuery(
-    ['breed', imageInfo?.breeds[0].id],
-    () => getBreedImages(imageInfo?.breeds[0].id),
-    {
-      enabled: !!imageInfo,
-    }
-  )
-
-  const favoriteMutation = useMutation((imageId: string) =>
-    postFavorite(imageId)
-  )
+  const { favoriteMutation } = useFavorites()
 
   const navigate = useNavigate()
 
@@ -47,75 +27,33 @@ export const BreedModal = (props: BreedModalProps) => {
       >
         <div className='m-5 mx-auto max-w-[688px]'>
           <div className='grid grid-cols-2 gap-4 pb-6'>
-            <div
-              style={{
-                backgroundImage: `url(${imageInfo?.url || fallbackPicture})`,
-              }}
-              className='h-[336px] w-[336px] overflow-hidden rounded-lg border border-blue-200 bg-cover bg-center bg-no-repeat'
+            <CatImage
+              imageId={imageInfo?.id}
+              imageUrl={imageInfo?.url}
+              className='h-[336px] w-[336px]'
               onClick={() => favoriteMutation.mutate(imageInfo?.id!)}
             />
-            <div>
-              <h2 className='pb-2 text-xl font-semibold'>
-                {imageInfo?.breeds[0].name}
-              </h2>
-              {imageInfo?.breeds[0].description && (
-                <p className='pb-4'>{imageInfo?.breeds[0].description}</p>
-              )}
-              {imageInfo?.breeds[0].temperament && (
-                <p>
-                  temperament:{' '}
-                  <span className='italic text-Blue-400'>
-                    {imageInfo?.breeds[0].temperament}
-                  </span>
-                </p>
-              )}
-              {imageInfo?.breeds[0].origin && (
-                <p>
-                  Origin:{' '}
-                  <span className='italic text-Blue-400'>
-                    {imageInfo?.breeds[0].origin}
-                  </span>
-                </p>
-              )}
-              {imageInfo?.breeds[0].weight && (
-                <p>
-                  Average weight:{' '}
-                  <span className='italic text-Blue-400'>
-                    {imageInfo?.breeds[0].weight.metric}kg
-                  </span>
-                </p>
-              )}
-              {imageInfo?.breeds[0].life_span && (
-                <p>
-                  Average life span:{' '}
-                  <span className='italic text-Blue-400'>
-                    {imageInfo?.breeds[0].life_span} years
-                  </span>
-                </p>
-              )}
-            </div>
+            {imageInfo && <BreedDetails imageInfo={imageInfo} />}
           </div>
           <div>
-            {isLoading ? (
+            {moreImageDataLoading ? (
               'Loading other breed images...'
             ) : (
               <>
                 <h3 className='pb-2 font-semibold'>More breed images</h3>
-                <div
-                  style={{ direction: 'rtl' }}
-                  className='grid grid-cols-[repeat(4,_160px)] grid-rows-[grid-cols-[repeat(8,_160px)]] gap-4'
-                >
-                  {data
+                <ImageGridContainer style={{ direction: 'rtl' }}>
+                  {moreImageData
                     ?.filter((image) => image.id !== imageInfo?.id)
                     .map((image, index) => (
                       <CatImage
+                        imageId={image.id}
                         imageUrl={image?.url}
                         onClick={() => navigate(`/breed/${image.id}`)}
                         className={`item-${index}`}
                         key={image.id}
                       />
                     ))}
-                </div>
+                </ImageGridContainer>
               </>
             )}
           </div>

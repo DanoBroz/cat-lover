@@ -1,24 +1,19 @@
 import { useInfiniteQuery } from '@tanstack/react-query'
 import { useState } from 'react'
-import { Navigate, useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { PortalWithState } from 'react-portal'
 import { getBreeds } from '../api/services'
 import { BreedCard, BreedModal, Button } from '../components'
 import { useContext } from 'react'
 import { CatContext } from '../context'
 import { useEffect } from 'react'
-import type { CatBreed } from '../types'
+import { ImageGridContainer } from '../containers'
 
 export const Breeds = () => {
   const { activeImageId } = useParams()
   const { activeCatImage, setActiveCatImage } = useContext(CatContext)
   const [modalOpen, setModalOpen] = useState(false)
   const navigate = useNavigate()
-
-  const [activeBreed, setActiveBreed] = useState<CatBreed | undefined>()
-
-  const fallbackPictureUrl =
-    'https://kidsdrawing.net/blog/wp-content/uploads/2020/11/cat_logo2.jpg'
 
   const breedsQuery = useInfiniteQuery({
     queryKey: ['breeds'],
@@ -41,10 +36,7 @@ export const Breeds = () => {
   ) : (
     <div className='grid gap-4'>
       {breedsQuery.data?.pages.map((page, index) => (
-        <section
-          key={index}
-          className='grid grid-cols-[repeat(4,_160px)] grid-rows-[grid-cols-[repeat(8,_160px)]] gap-4'
-        >
+        <ImageGridContainer index={index}>
           {page.data.map((item, index) => (
             <BreedCard
               cardProps={item}
@@ -52,7 +44,7 @@ export const Breeds = () => {
               onClick={() => setModalOpen(true)}
             />
           ))}
-        </section>
+        </ImageGridContainer>
       ))}
       {breedsQuery.isFetchingNextPage && 'Loading...'}
       <Button
@@ -64,26 +56,12 @@ export const Breeds = () => {
       <PortalWithState
         closeOnOutsideClick
         closeOnEsc
-        onClose={() => {
-          //   setModalOpen(false)
-          //   setActiveCatImage(undefined)
-          navigate('/breed')
-        }}
+        onClose={() => navigate('/breed')}
       >
         {({ openPortal, closePortal, portal, isOpen }) => {
           modalOpen ? openPortal() : closePortal()
           stopBodyScroll(isOpen)
-          return (
-            <>
-              {portal(
-                <BreedModal
-                  catImageId={activeImageId!}
-                  fallbackPicture={fallbackPictureUrl}
-                  closePortal={closePortal}
-                />
-              )}
-            </>
-          )
+          return <>{portal(<BreedModal closePortal={closePortal} />)}</>
         }}
       </PortalWithState>
     </div>
