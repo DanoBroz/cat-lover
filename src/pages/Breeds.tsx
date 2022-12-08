@@ -1,20 +1,16 @@
-import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query'
+import { useInfiniteQuery } from '@tanstack/react-query'
 import { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { PortalWithState } from 'react-portal'
 import { getBreeds } from '../api/services'
 import { BreedCard, BreedModal, Button } from '../components'
-import { useContext } from 'react'
-import { CatContext } from '../context'
 import { useEffect } from 'react'
 import { ImageGridContainer } from '../containers'
 
 export const Breeds = () => {
   const { activeImageId } = useParams()
-  const { activeCatImage, setActiveCatImage } = useContext(CatContext)
   const [modalOpen, setModalOpen] = useState(false)
   const navigate = useNavigate()
-  const queryClient = useQueryClient()
 
   const breedsQuery = useInfiniteQuery({
     queryKey: ['breeds'],
@@ -24,7 +20,7 @@ export const Breeds = () => {
 
   useEffect(() => {
     !!activeImageId ? setModalOpen(true) : setModalOpen(false)
-  }, [activeCatImage, activeImageId])
+  }, [activeImageId])
 
   const stopBodyScroll = (isModalOpen: boolean) => {
     isModalOpen
