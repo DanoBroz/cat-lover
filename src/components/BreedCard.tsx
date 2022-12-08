@@ -7,6 +7,11 @@ export const BreedCard = (props: CardProps<CatBreed>) => {
   const { index, cardProps } = props
   const navigate = useNavigate()
 
+  const handleBreedClick = (e: MouseEvent) => {
+    e.stopPropagation()
+    navigate(`/breed/${cardProps.image?.id}`)
+  }
+
   return (
     cardProps && (
       <CatImage
@@ -14,10 +19,8 @@ export const BreedCard = (props: CardProps<CatBreed>) => {
         imageUrl={cardProps.image?.url}
         className={`item-${index}`}
         key={cardProps.id}
-        onClick={(e: MouseEvent) => {
-          e.stopPropagation()
-          navigate(`/breed/${cardProps.image?.id}`)
-        }}
+        isBreed
+        onClick={handleBreedClick}
       >
         <span className='absolute inset-0 top-auto bg-Blue-100 px-2 py-1'>
           {cardProps.name}
