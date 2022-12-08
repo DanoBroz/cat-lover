@@ -2,6 +2,7 @@ import { useInfiniteQuery } from '@tanstack/react-query'
 
 import { getRandom } from '../api/services'
 import { Button, RandomCard } from '../components'
+import { ScrollbarContainer } from '../containers'
 
 export const Random = () => {
   const randomQuery = useInfiniteQuery({
@@ -13,7 +14,7 @@ export const Random = () => {
   return randomQuery.isLoading ? (
     <div>Loading...</div>
   ) : (
-    <div className='grid gap-4'>
+    <ScrollbarContainer className='grid gap-4'>
       {randomQuery.data?.pages.map((page, index) => (
         <section
           key={index}
@@ -33,6 +34,6 @@ export const Random = () => {
       >
         {randomQuery.isFetchingNextPage ? 'loading more...' : 'load more'}
       </Button>
-    </div>
+    </ScrollbarContainer>
   )
 }

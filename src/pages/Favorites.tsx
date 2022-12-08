@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { getFavorites } from '../api/services'
 import { ReactComponent as FilledHeartIcon } from '../assets/icons/heart-filled.svg'
 import { CatImage } from '../components'
-import { ImageGridContainer } from '../containers'
+import { ImageGridContainer, ScrollbarContainer } from '../containers'
 import { useFavorites } from '../hooks'
 
 export const Favorites = () => {
@@ -25,7 +25,7 @@ export const Favorites = () => {
   return favoritesQuery.isLoading ? (
     <div>Loading...</div>
   ) : (
-    <div className='grid gap-4'>
+    <ScrollbarContainer className='grid gap-4'>
       {favoritesQuery.data?.length ? (
         <ImageGridContainer>
           {favoritesQuery.data?.map((item) => (
@@ -46,6 +46,6 @@ export const Favorites = () => {
       ) : (
         <h2 className='text-xl'>Looks like you're more of a dog person...</h2>
       )}
-    </div>
+    </ScrollbarContainer>
   )
 }

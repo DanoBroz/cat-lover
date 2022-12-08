@@ -5,7 +5,7 @@ import { PortalWithState } from 'react-portal'
 import { getBreeds } from '../api/services'
 import { BreedCard, BreedModal, Button } from '../components'
 import { useEffect } from 'react'
-import { ImageGridContainer } from '../containers'
+import { ImageGridContainer, ScrollbarContainer } from '../containers'
 
 export const Breeds = () => {
   const { activeImageId } = useParams()
@@ -31,7 +31,7 @@ export const Breeds = () => {
   return breedsQuery.isLoading ? (
     <div>Loading...</div>
   ) : (
-    <div className='grid gap-4'>
+    <ScrollbarContainer className='-mr-6 grid gap-4 pr-6'>
       {breedsQuery.data?.pages.map((page, index) => (
         <ImageGridContainer index={index}>
           {page.data.map((item, index) => (
@@ -61,6 +61,6 @@ export const Breeds = () => {
           return <>{portal(<BreedModal closePortal={closePortal} />)}</>
         }}
       </PortalWithState>
-    </div>
+    </ScrollbarContainer>
   )
 }

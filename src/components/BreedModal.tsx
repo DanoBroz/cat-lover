@@ -1,6 +1,6 @@
 import { PortalFunctionParams } from 'react-portal'
 import { useNavigate } from 'react-router-dom'
-import { ImageGridContainer } from '../containers'
+import { ImageGridContainer, ScrollbarContainer } from '../containers'
 import { useFavorites, useModalData } from '../hooks'
 import { BreedDetails } from './BreedDetails'
 import { CatImage } from './CatImage'
@@ -22,8 +22,9 @@ export const BreedModal = (props: BreedModalProps) => {
       className='fixed inset-0 bg-black/80 text-Blue-800'
       onClick={closePortal}
     >
-      <div
-        className='modal-content container sticky top-20 max-h-[70vh] overflow-y-scroll rounded-lg bg-white py-16'
+      <ScrollbarContainer
+        className='modal-content container relative top-20 gap-4 rounded-lg bg-white py-16'
+        isModal
         onClick={(e) => e.stopPropagation()}
       >
         <CrossIcon
@@ -63,7 +64,7 @@ export const BreedModal = (props: BreedModalProps) => {
             )}
           </div>
         </div>
-      </div>
+      </ScrollbarContainer>
     </div>
   )
 }
