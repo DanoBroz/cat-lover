@@ -7,10 +7,8 @@ export const BreedCard = (props: CardProps<CatBreed>) => {
   const { index, cardProps } = props
   const navigate = useNavigate()
 
-  const handleBreedClick = (e: MouseEvent) => {
-    e.stopPropagation()
+  const handleBreedClick = (e: MouseEvent) =>
     navigate(`/breed/${cardProps.image?.id}`)
-  }
 
   return (
     cardProps && (
